@@ -30,7 +30,7 @@ class RecipesController < ApplicationController
   	recipe.title = params[:title]
   	recipe.photo_url = params[:photo_url]
   	recipe.instruction = params[:instruction]
-  	recipe.date = DateTime.now
+  	recipe.date = Time.now
   	recipe.save
   	redirect_to recipes_url, notice: "New Recipe is saved."
   end
@@ -40,7 +40,7 @@ class RecipesController < ApplicationController
 
   def update
   	@recipe.title = params[:title]
-  	@recipe.date = DateTime.now
+  	@recipe.date = Time.now
   	@recipe.instruction = params[:instruction]
   	@recipe.photo_url = params[:photo_url]
   	@recipe.save

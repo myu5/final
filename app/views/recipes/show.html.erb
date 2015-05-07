@@ -3,7 +3,7 @@
 <p>
   <span class="rating">Rated: <%= @recipe.stars %></span>
   "created at "
-  <%= @recipe.date %>
+  <%= @recipe.date.getlocal.strftime("%Y-%m-%d %H:%M:%S") %>
   <% @recipe.stars.times do %>
     &#9733;
   <% end %>
