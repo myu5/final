@@ -27,7 +27,12 @@ ActiveRecord::Schema.define(version: 0) do
     t.string   "instruction"
     t.datetime "date"
     t.integer  "stars"
+    t.string   "ingredients"
+    t.string   "duration"
+    t.integer  "user_id"
   end
+
+  add_index "recipes", ["user_id"], name: "index_recipes_on_user_id"
 
   create_table "reviews", force: :cascade do |t|
     t.string   "title"
@@ -35,12 +40,23 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer  "rating"
     t.datetime "date"
     t.integer  "recipe_id"
+    t.integer  "user_id"
   end
 
   add_index "reviews", ["recipe_id"], name: "index_reviews_on_recipe_id"
+  add_index "reviews", ["user_id"], name: "index_reviews_on_user_id"
 
   create_table "tags", force: :cascade do |t|
     t.string "name"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string   "user_name"
+    t.string   "email"
+    t.datetime "create_date"
+    t.string   "photo_url"
+    t.string   "background"
+    t.string   "gender"
   end
 
 end
