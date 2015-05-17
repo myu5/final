@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.string   "ingredients"
     t.string   "duration"
     t.integer  "user_id"
+    t.integer  "num_reviews"
   end
 
   add_index "recipes", ["user_id"], name: "index_recipes_on_user_id"
@@ -57,6 +58,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.string   "photo_url"
     t.string   "background"
     t.string   "gender"
+    t.string   "password"
   end
 
 end
