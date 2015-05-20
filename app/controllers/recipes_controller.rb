@@ -19,32 +19,56 @@ class RecipesController < ApplicationController
   def show
   	if @recipe == nil
   		redirect_to recipes_url, notice: "recipe not found."
+    else
+      @tags = @recipe.tags
   	end
+
   end
 
   def new
+    @recipe = Recipe.new
   end
 
   def create
-  	recipe = Recipe.new
-  	recipe.title = params[:title]
-  	recipe.photo_url = params[:photo_url]
-  	recipe.instruction = params[:instruction]
-  	recipe.date = Time.now
-  	recipe.save
-  	redirect_to recipes_url, notice: "New Recipe is saved."
+    @recipe = Recipe.new
+  	@recipe.title = params[:title]
+  	@recipe.photo_url = params[:photo_url]
+    @recipe.ingredients = params[:ingredients]
+  	@recipe.instruction = params[:instruction]
+    @recipe.duration = params[:duration]
+  	@recipe.date = Time.now
+    @recipe.stars = 4
+    @recipe.num_reviews = 0
+    if cookies["user_id"] != nil
+      @recipe.user_id = cookies["user_id"]
+      if @recipe.save
+        redirect_to recipes_url, notice: "New Recipe is saved."
+      else
+        render 'new'
+      end
+    else
+      redirect_to recipes_url, notice: "Sorry...You have to Sign In in order to post Recipe!"
+    end
   end
 
   def edit
+    if @recipe.user_id.to_s !=cookies["user_id"]
+      redirect_to recipes_url, notice: "Sorry...You can't edit other Users Recipe!"
+    end
   end
 
   def update
   	@recipe.title = params[:title]
+    @recipe.ingredients = params[:ingredients]
   	@recipe.date = Time.now
   	@recipe.instruction = params[:instruction]
   	@recipe.photo_url = params[:photo_url]
-  	@recipe.save
-  	redirect_to recipes_url, notice: "recipe is updated"
+    puts @recipe.ingredients
+    if @recipe.save
+      redirect_to recipe_url(@recipe.id), notice: "recipe is updated"
+    else
+      render "edit"
+    end
   end
 
   def destroy
@@ -52,5 +76,4 @@ class RecipesController < ApplicationController
   	redirect_to recipes_url
 
   end
-
 end

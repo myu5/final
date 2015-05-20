@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   get "/logout" => 'sessions#destroy'
 
   resources :recipes
+  resources :reviews
+  resources :tags
 # The "Golden 7" for accessing the 'recipes' resource
 
   # get '/recipes/new' => 'recipes#new', as: 'new_recipe'

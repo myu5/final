@@ -10,7 +10,23 @@
   <% (5-@recipe.stars).times do %>
     &#9734;
   <% end %>
+  <h5>Tags</h5>
+  <% @tags.each do |tag| %>
+  	<ul>
+  		<li>
+  			<%= link_to tag.name, tag_url(tag.id) %>
+  		</li>
+  	</ul>
+  <% end %>
+
 </p>
 <%= image_tag @recipe.photo_url %>
 <hr>
+<h5>Ingredients:</h5>
+<p><%= @recipe.ingredients %></p>
+<br>
+<h5>Instructions:</h5>
 <p><%= @recipe.instruction %></p>
+<br>
+<h5>Duration:</h5>
+<p><%= @recipe.duration %></p>
