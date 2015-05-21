@@ -26,6 +26,9 @@ class RecipesController < ApplicationController
   end
 
   def new
+    if !cookies["user_id"].present?
+      redirect_to recipes_url, notice: "Sorry...You have to Sign In in order to post Recipe!"
+    end
     @recipe = Recipe.new
   end
 
@@ -39,22 +42,17 @@ class RecipesController < ApplicationController
   	@recipe.date = Time.now
     @recipe.stars = 4
     @recipe.num_reviews = 0
-    if cookies["user_id"] != nil
-      @recipe.user_id = cookies["user_id"]
-      if @recipe.save
-        redirect_to recipes_url, notice: "New Recipe is saved."
-      else
-        render 'new'
-      end
+    @recipe.user_id = cookies["user_id"]
+    if @recipe.save
+      redirect_to recipes_url, notice: "New Recipe is saved."
     else
-      redirect_to recipes_url, notice: "Sorry...You have to Sign In in order to post Recipe!"
+      render 'new'
     end
+    
   end
 
   def edit
-    if @recipe.user_id.to_s !=cookies["user_id"]
-      redirect_to recipes_url, notice: "Sorry...You can't edit other Users Recipe!"
-    end
+    
   end
 
   def update

@@ -7,7 +7,7 @@
     <th>Title</th>
     <th>Date</th>
     <th>Rating</th>
-    <th colspan=3>Instruction</th>
+    <!-- <th colspan=3></th> -->
   </tr>
   <% @recipes.each do |recipe| %>
   <tr>
@@ -21,8 +21,8 @@
         &#9734;
       <% end %>
     </td>
-    <td><%= link_to "Edit...", "/recipes/#{recipe.id}/edit" %></td>
-    <td><%= link_to "Delete", "/recipes/#{recipe.id}", :method => 'delete' %></td>
+    <!-- <td><%= link_to "Edit...", "/recipes/#{recipe.id}/edit" %></td>
+    <td><%= link_to "Delete", "/recipes/#{recipe.id}", :method => 'delete' %></td> -->
   </tr>
   <% end %>
 </table>
