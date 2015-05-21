@@ -22,6 +22,8 @@ class RecipesController < ApplicationController
     else
       @tags = @recipe.tags
   	end
+    @review = Review.new
+    @reviews = Review.where(recipe_id: @recipe.id).order('date desc')
 
   end
 
