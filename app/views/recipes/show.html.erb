@@ -1,5 +1,5 @@
-<h3>Errors for Reviews:</h3>
 <% if @review.errors.any? %>
+<h3>Errors for Posting Reviews:</h3>
   <ul>
     <% @review.errors.full_messages.each do |msg| %>
       <li><%= msg %></li>
@@ -9,7 +9,7 @@
 <% end %>
 <h3><%= @recipe.title %></h3>  
 
-<% if cookies["user_id"] == @recipe.user_id.to_s %>
+<% if session["user_id"] == @recipe.user_id.to_s %>
 <%= link_to "(Edit...)", "/recipes/#{@recipe.id}/edit" %>
 <%= link_to "(Delete Recipe)", "/recipes/#{@recipe.id}", :method => 'delete' %>
 <% end %>
@@ -24,6 +24,7 @@
   <% (5-@recipe.stars).times do %>
     &#9734;
   <% end %>
+  <% if @tags.present? %>
   <h5>Tags</h5>
   <% @tags.each do |tag| %>
   	<ul>
@@ -31,6 +32,7 @@
   			<%= link_to tag.name, tag_url(tag.id) %>
   		</li>
   	</ul>
+  <% end %>
   <% end %>
 
 </p>
@@ -45,7 +47,7 @@
 <h5>Duration:</h5>
 <p><%= @recipe.duration %></p>
 <hr>
-
+<% if session["user_id"].present? %>
 <%= form_tag "/reviews" do %>
     <%= hidden_field_tag :recipe_id, @recipe.id %>
     <div>
@@ -65,7 +67,7 @@
         <%= submit_tag "Post Review"%>
     </div>
 <% end %>
-
+<% end %>
 <% if @reviews.present? %>
     <h3>Comments</h3>
 <table>
@@ -75,7 +77,7 @@
                 &#9734;
             <%end%>
             <%= review.title %> <br>(<%= review.date.getlocal.strftime("%Y-%m-%d %H:%M:%S")  %>)
-            <% if cookies["user_id"].present? and cookies["user_id"].to_i == review.user_id %>
+            <% if session["user_id"].present? and session["user_id"].to_i == review.user_id %>
                 <%= link_to "(Delete Review)", delete_review_path(:id => review.id, :recipe_id => @recipe.id), :method => :delete %>
             <%end%>
             <br>

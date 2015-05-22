@@ -27,7 +27,7 @@ Category
 
 User
   user_name: string
-  password: string
+  password_digest: string
   email: string
   gender: string
   create_date: datetime

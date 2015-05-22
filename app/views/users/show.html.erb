@@ -1,0 +1,21 @@
+<h2>My Chef Account</h2>
+
+<p>
+  <strong>Name:</strong> <%= @user.user_name %>
+</p>
+
+<p>
+  <strong>Email address on file:</strong> <%= @user.email %>
+</p>
+<%= image_tag @user.photo_url %>
+<p>
+  <strong>Account Created Date:</strong> <%= @user.create_date.getlocal.strftime("%Y-%m-%d %H:%M:%S") %>
+</p>
+
+<p>
+  <strong>Background:</strong> <%= @user.background %>
+</p>
+
+<p>
+  <strong>Gender:</strong> <%= @user.gender %>
+</p>

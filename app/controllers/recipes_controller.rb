@@ -1,19 +1,32 @@
 class RecipesController < ApplicationController
+  before_action :require_user, :only => [:new, :create, :edit, :update, :destroy]
   before_action :find_recipe, :only => [:show, :edit, :update, :destroy]
+  before_action :authorize, :only => [:edit, :update, :destroy]
+  
 
   def find_recipe
   	@recipe = Recipe.find_by(id: params["id"])
   	#Todo : generate stars from reviews
-  	@recipe.stars = 4
-  	@recipe.save
   end
+
+  def require_user
+    if !session[:user_id].present?
+      redirect_to root_url, notice: "You have to Sign In to Perform the action."
+      return
+    end
+  end
+
+  def authorize
+    if @recipe.user_id.to_s != session[:uesr_id]
+      redirect_to root_url, notice: "You can't edit or delete Recipe not Posted by you."
+      return
+    end
+  end
+
+
 
   def index
   	@recipes = Recipe.order('title asc')
-  	@recipes.each do |rcp|
-  		#Todo : generate stars from reviews
-  		rcp.stars = 4
-  	end
   end
 
   def show
@@ -28,9 +41,6 @@ class RecipesController < ApplicationController
   end
 
   def new
-    if !cookies["user_id"].present?
-      redirect_to recipes_url, notice: "Sorry...You have to Sign In in order to post Recipe!"
-    end
     @recipe = Recipe.new
   end
 
@@ -44,7 +54,7 @@ class RecipesController < ApplicationController
   	@recipe.date = Time.now
     @recipe.stars = 4
     @recipe.num_reviews = 0
-    @recipe.user_id = cookies["user_id"]
+    @recipe.user_id = session["user_id"]
     if @recipe.save
       redirect_to recipes_url, notice: "New Recipe is saved."
     else
@@ -72,7 +82,13 @@ class RecipesController < ApplicationController
   end
 
   def destroy
-  	@recipe.delete
+    @recipe.transaction do
+      reviews = @recipe.reviews
+      reviews.each do |review|
+        review.delete
+      end
+      @recipe.delete
+  	end
   	redirect_to recipes_url
 
   end
