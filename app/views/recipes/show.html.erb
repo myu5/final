@@ -9,7 +9,7 @@
 <% end %>
 <h3><%= @recipe.title %></h3>  
 
-<% if session["user_id"] == @recipe.user_id.to_s %>
+<% if session["user_id"] == @recipe.user_id %>
 <%= link_to "(Edit...)", "/recipes/#{@recipe.id}/edit" %>
 <%= link_to "(Delete Recipe)", "/recipes/#{@recipe.id}", :method => 'delete' %>
 <% end %>
@@ -36,7 +36,11 @@
   <% end %>
 
 </p>
-<%= image_tag @recipe.photo_url %>
+
+<%= image_tag @recipe.photo_url, :class => "recipe_img"  %><br>
+<h4>Posted By:</h4>
+<%= image_tag @recipe.user.photo_url, :class => "small_user_img"  %><br>
+<%= link_to "#{@recipe.user.user_name}", "/users/#{@recipe.user.id}" %><br>
 <hr>
 <h5>Ingredients:</h5>
 <p><%= @recipe.ingredients %></p>
@@ -76,8 +80,9 @@
             <% (review.stars).times do %>
                 &#9734;
             <%end%>
-            <%= review.title %> <br>(<%= review.date.getlocal.strftime("%Y-%m-%d %H:%M:%S")  %>)
-            <% if session["user_id"].present? and session["user_id"].to_i == review.user_id %>
+            <%= review.title %> <%= link_to "#{review.user.user_name}", "/users/#{review.user.id}" %>
+            <br>(<%= review.date.getlocal.strftime("%Y-%m-%d %H:%M:%S")  %>)
+            <% if session["user_id"].present? and session["user_id"] == review.user_id %>
                 <%= link_to "(Delete Review)", delete_review_path(:id => review.id, :recipe_id => @recipe.id), :method => :delete %>
             <%end%>
             <br>

@@ -1,11 +1,11 @@
 class RecipesController < ApplicationController
   before_action :require_user, :only => [:new, :create, :edit, :update, :destroy]
-  before_action :find_recipe, :only => [:show, :edit, :update, :destroy]
+  before_action :find_recipe, :only => [:authorize, :show, :edit, :update, :destroy]
   before_action :authorize, :only => [:edit, :update, :destroy]
   
 
   def find_recipe
-  	@recipe = Recipe.find_by(id: params["id"])
+  	@recipe = Recipe.find_by(id: params[:id])
   	#Todo : generate stars from reviews
   end
 
@@ -17,7 +17,7 @@ class RecipesController < ApplicationController
   end
 
   def authorize
-    if @recipe.user_id.to_s != session[:uesr_id]
+    if @recipe.user_id != session["user_id"].to_i
       redirect_to root_url, notice: "You can't edit or delete Recipe not Posted by you."
       return
     end
@@ -26,7 +26,14 @@ class RecipesController < ApplicationController
 
 
   def index
-  	@recipes = Recipe.order('title asc')
+  	if params["keyword"].present?
+      @recipes = Recipe.where("title LIKE ?", "%#{params[:keyword]}%")
+    else
+      @recipes = Recipe.all
+    end
+
+    @recipes = @recipes.order('title asc')
+    
   end
 
   def show
@@ -52,7 +59,7 @@ class RecipesController < ApplicationController
   	@recipe.instruction = params[:instruction]
     @recipe.duration = params[:duration]
   	@recipe.date = Time.now
-    @recipe.stars = 4
+    @recipe.stars = 0
     @recipe.num_reviews = 0
     @recipe.user_id = session["user_id"]
     if @recipe.save

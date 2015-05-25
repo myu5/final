@@ -2,9 +2,18 @@ Rails.application.routes.draw do
   root 'recipes#index'
 
   # User Sign Up#
+  patch "/users/:id" => 'users#update'
   get "/signup" => 'users#new'
-  post "/users" => 'users#create'
   get "/users/:id" => 'users#show'
+  post "/users" => 'users#create'
+  
+
+  # User Update Profile
+  get "/users/:id/edit" => 'users#edit'
+  patch "/change_password/:id" => 'users#update_password'
+  get "/change_password/:id/edit_password" => 'users#edit_password'
+  
+  
 
   # User Login #
   get "/login" => 'sessions#new'

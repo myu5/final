@@ -61,7 +61,11 @@ class ReviewsController < ApplicationController
       @review.delete
       recipe = @review.recipe
       recipe.num_reviews = recipe.num_reviews - 1
-      recipe.stars = recipe.reviews.sum(:stars)/recipe.num_reviews
+      if recipe.num_reviews==0
+        recipe.stars=0
+      else
+        recipe.stars = recipe.reviews.sum(:stars)/recipe.num_reviews
+      end
       recipe.save
     end
     @reviews = Review.where(recipe_id: params[:recipe_id]).order('date desc')

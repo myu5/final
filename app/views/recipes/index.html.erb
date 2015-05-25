@@ -1,6 +1,10 @@
 <p>
 	<%= link_to "Add a New recipe", "/recipes/new" %>
 </p>
+<%= form_tag recipes_url, :method => "get" do %>
+    <%= text_field_tag :keyword %>
+    <%= submit_tag "Search" %>
+<% end %>
 
 <table class="table table-striped">
   <tr>

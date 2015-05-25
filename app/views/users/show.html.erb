@@ -1,21 +1,28 @@
-<h2>My Chef Account</h2>
+<h2>My Chef Account
+<% if session["user_id"] == @user.id %>
+<%= link_to "(Edit...)", "/users/#{@user.id}/edit" %></h2>
+<%= link_to "Change Password", "/change_password/#{@user.id}/edit_password" %>
+<% else %>
+</h2>
+<% end %>
+
 
 <p>
   <strong>Name:</strong> <%= @user.user_name %>
 </p>
-
+<p>
+  <strong>Gender:</strong> <%= @user.gender %>
+</p>
 <p>
   <strong>Email address on file:</strong> <%= @user.email %>
 </p>
-<%= image_tag @user.photo_url %>
+<%= image_tag @user.photo_url, :class => "user_img" %>
 <p>
-  <strong>Account Created Date:</strong> <%= @user.create_date.getlocal.strftime("%Y-%m-%d %H:%M:%S") %>
+  <strong>Account Started Since</strong> <%= @user.create_date.getlocal.strftime("%Y-%m-%d") %>
 </p>
 
 <p>
   <strong>Background:</strong> <%= @user.background %>
 </p>
 
-<p>
-  <strong>Gender:</strong> <%= @user.gender %>
-</p>
+
