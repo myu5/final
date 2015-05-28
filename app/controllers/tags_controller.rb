@@ -3,7 +3,7 @@ class TagsController < ApplicationController
 		@tags = Tag.order('name asc')
 	end
 	def show
-		@recipes = Tag.find_by(id: params[:id]).recipes
+		@recipes = Tag.find_by(id: params[:id]).recipes.paginate(:page => params[:page], :per_page => 10)
 		#Wait to be displayed
 	end
 	def new

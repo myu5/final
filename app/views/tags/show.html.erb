@@ -1,0 +1,23 @@
+<p><%= @recipes.count %> recipes.</p>
+<table class="table table-striped">
+  <tr>
+    <th>Title</th>
+    <th>Date</th>
+    <th>Rating</th>
+  </tr>
+  <% @recipes.each do |recipe| %>
+    <tr>
+      <td><%= link_to recipe.title, recipe_url(recipe.id) %></td>
+      <td><%= recipe.date.getlocal.strftime("%Y-%m-%d") %></td>
+      <td>
+        <% recipe.stars.times do %>
+          &#9733;
+        <% end %>
+        <% (5 - recipe.stars).times do %>
+          &#9734;
+        <% end %>
+        </td>
+    </tr>
+  <% end %>
+<%= will_paginate @recipes, :class=>"flickr_pagination" %>
+</table>

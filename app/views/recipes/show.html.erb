@@ -17,7 +17,7 @@
 <p>
   <span class="rating">Rated: <%= @recipe.stars %></span>
   "created at "
-  <%= @recipe.date.getlocal.strftime("%Y-%m-%d %H:%M:%S") %>
+  <%= @recipe.date.getlocal.strftime("%Y-%m-%d") %>
   <% @recipe.stars.times do %>
     &#9733;
   <% end %>
@@ -27,11 +27,8 @@
   <% if @tags.present? %>
   <h5>Tags</h5>
   <% @tags.each do |tag| %>
-  	<ul>
-  		<li>
-  			<%= link_to tag.name, tag_url(tag.id) %>
-  		</li>
-  	</ul>
+  
+  	<%= link_to tag.name+" ", tag_url(tag.id) %>|
   <% end %>
   <% end %>
 
@@ -78,7 +75,7 @@
     <% @reviews.each do |review| %>
         <tr>
             <% (review.stars).times do %>
-                &#9734;
+                &#9733;
             <%end%>
             <%= review.title %> <%= link_to "#{review.user.user_name}", "/users/#{review.user.id}" %>
             <br>(<%= review.date.getlocal.strftime("%Y-%m-%d %H:%M:%S")  %>)

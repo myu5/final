@@ -1,21 +1,32 @@
+<% if session["user_id"].present? %>
 <p>
-	<%= link_to "Add a New recipe", "/recipes/new" %>
+  <%= link_to "Add a New recipe", "/recipes/new" %>
 </p>
+<% end %>
 <%= form_tag recipes_url, :method => "get" do %>
     <%= text_field_tag :keyword %>
     <%= submit_tag "Search" %>
 <% end %>
-
+<div>
+  <% if @tags.present? %>
+  <h5>Tags</h5>
+  <% @tags.each do |tag| %>
+    <%= link_to tag.name+" ", tag_url(tag.id) %>|
+  <% end %>
+  <% end %>
+</div>
 <table class="table table-striped">
   <tr>
     <th>Title</th>
+    <th>User</th>
     <th>Date</th>
     <th>Rating</th>
   </tr>
   <% @recipes.each do |recipe| %>
   <tr>
     <td><%= link_to recipe.title, recipe_url(recipe.id) %></td>
-    <td><%= recipe.date.getlocal.strftime("%Y-%m-%d %H:%M:%S") %></td>
+    <td><%= link_to "#{recipe.user.user_name}", "/users/#{recipe.user.id}" %></td>
+    <td><%= recipe.date.getlocal.strftime("%Y-%m-%d") %></td>
     <td>
       <% recipe.stars.times do %>
         &#9733;
@@ -27,3 +38,4 @@
   </tr>
   <% end %>
 </table>
+<%= will_paginate @recipes, :class=>"flickr_pagination" %>

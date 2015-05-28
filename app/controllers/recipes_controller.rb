@@ -2,7 +2,7 @@ class RecipesController < ApplicationController
   before_action :require_user, :only => [:new, :create, :edit, :update, :destroy]
   before_action :find_recipe, :only => [:authorize, :show, :edit, :update, :destroy]
   before_action :authorize, :only => [:edit, :update, :destroy]
-  
+  before_action :find_tags, :only =>[:index, :new, :create, :edit, :update]
 
   def find_recipe
   	@recipe = Recipe.find_by(id: params[:id])
@@ -22,7 +22,9 @@ class RecipesController < ApplicationController
       return
     end
   end
-
+  def find_tags
+    @tags = Tag.all
+  end
 
 
   def index
@@ -32,8 +34,8 @@ class RecipesController < ApplicationController
       @recipes = Recipe.all
     end
 
-    @recipes = @recipes.order('title asc')
-    
+    @recipes = @recipes.order('title asc').paginate(:page => params[:page],:per_page => 10)
+
   end
 
   def show
@@ -49,41 +51,96 @@ class RecipesController < ApplicationController
 
   def new
     @recipe = Recipe.new
+    tags = @recipe.tags
+    @marked = {}
+    tags.each do |tag|
+      @marked[tag.id] = true
+    end
+
   end
 
   def create
     @recipe = Recipe.new
-  	@recipe.title = params[:title]
-  	@recipe.photo_url = params[:photo_url]
+    @recipe.title = params[:title]
+    @recipe.photo_url = params[:photo_url]
     @recipe.ingredients = params[:ingredients]
-  	@recipe.instruction = params[:instruction]
+    @recipe.instruction = params[:instruction]
     @recipe.duration = params[:duration]
-  	@recipe.date = Time.now
+    @recipe.date = Time.now
     @recipe.stars = 0
     @recipe.num_reviews = 0
     @recipe.user_id = session["user_id"]
-    if @recipe.save
+    @recipe.transaction do   
+      @recipe.save
+      @recipe.categories.each do |rc|
+        rc.delete
+      end
+      @tags.each do |tag|
+        if params["TagID#{tag.id}"].present?
+          cate = Category.new
+          cate.recipe_id = @recipe.id
+          cate.tag_id = tag.id
+          cate.save
+        end
+      end
+    end
+
+    if !@recipe.errors.any?
       redirect_to recipes_url, notice: "New Recipe is saved."
+      return
     else
+      @marked = {}
+      @tags.each do |tag|
+        if params["TagID#{tag.id}"].present?
+          @marked[tag.id]= true
+        end
+      end
       render 'new'
     end
     
   end
 
   def edit
-    
+    tags = @recipe.tags
+    @marked = {}
+    tags.each do |tag|
+      @marked[tag.id] = true
+    end
   end
 
   def update
-  	@recipe.title = params[:title]
-    @recipe.ingredients = params[:ingredients]
-  	@recipe.date = Time.now
-  	@recipe.instruction = params[:instruction]
-  	@recipe.photo_url = params[:photo_url]
-    puts @recipe.ingredients
-    if @recipe.save
+    @recipe.transaction do
+      @recipe.title = params[:title]
+      @recipe.ingredients = params[:ingredients]
+      @recipe.date = Time.now
+      @recipe.instruction = params[:instruction]
+      @recipe.photo_url = params[:photo_url]
+      @recipe.save
+
+      @recipe.categories.each do |rc|
+        rc.delete
+      end
+      @tags.each do |tag|
+        if params["TagID#{tag.id}"].present?
+          cate = Category.new
+          cate.recipe_id = @recipe.id
+          cate.tag_id = tag.id
+          cate.save
+        end
+
+      end
+    end
+
+    if !@recipe.errors.any?
       redirect_to recipe_url(@recipe.id), notice: "recipe is updated"
+      return
     else
+      tags = @recipe.tags
+      @marked = {}
+      tags.each do |tag|
+        @marked[tag.id]= true
+      end
+
       render "edit"
     end
   end

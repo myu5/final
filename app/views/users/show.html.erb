@@ -24,5 +24,17 @@
 <p>
   <strong>Background:</strong> <%= @user.background %>
 </p>
+<p>
+  <strong><%= @user.user_name %>'s Recipes:</strong>
+</p>
+<% @recipes.each do |recipe| %>
+    <%= link_to recipe.title+" ", recipe_url(recipe.id) %></td>
+    <% if recipe.stars != 0 %>
+			(<% recipe.stars.times do %>
+        &#9733;
+      <% end %>
+      )
 
+    <% end %>|
+<% end %>
 
