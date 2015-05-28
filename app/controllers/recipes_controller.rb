@@ -34,7 +34,7 @@ class RecipesController < ApplicationController
       @recipes = Recipe.all
     end
 
-    @recipes = @recipes.order('title asc').paginate(:page => params[:page],:per_page => 10)
+    @recipes = @recipes.order('stars desc').paginate(:page => params[:page],:per_page => 10)
 
   end
 

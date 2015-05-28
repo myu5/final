@@ -13,7 +13,9 @@ Rails.application.routes.draw do
   patch "/change_password/:id" => 'users#update_password'
   get "/change_password/:id/edit_password" => 'users#edit_password'
   
-  
+  #Forget Password Route
+  get "/forget_password"=> 'users#forget_password'
+  post "/forget_password" => 'users#send_password'
 
   # User Login #
   get "/login" => 'sessions#new'

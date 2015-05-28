@@ -3,6 +3,14 @@ class User < ActiveRecord::Base
 	has_many :recipes
 	has_many :reviews
 
+	validates :password, :presence => true,
+                       :confirmation => true,
+                       :length => {:within => 6..40},
+                       :on => :create
+  validates :password, :confirmation => true,
+                       :length => {:within => 6..40},
+                       :allow_blank => true,
+                       :on => :update
 	validates_presence_of :user_name
 	validates_presence_of :email
 	validates_uniqueness_of :user_name
