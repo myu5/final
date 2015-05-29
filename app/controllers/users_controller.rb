@@ -133,10 +133,14 @@ class UsersController < ApplicationController
 		mail.to = send_to
 		mail.subject = "New password for your Recipe account"
 		mail.text = "Dear #{user.user_name}:\n\nYour new password is #{user.password}.\n\nSent by Recipe.com"
-		host = "smtp.mandrillapp.com"
-		port = 587
-		sender = "lsliusen1986@gmail.com"
-		key = "lPYuVe53FBSZfTFaGuS9-w"
+		
+		# Notice: until # end #, should be using ENV[""] to access the secret values, and those values should be preset 
+		# in terminal in advance in production. However, here exposed the secrets for convenience of grading....
+		host = "smtp.mandrillapp.com" #ENV["EMAIL_HOST"]
+		port = 587										#ENV["port"].to_i
+		sender = "lsliusen1986@gmail.com"	#ENV["EMAIL_SENDER"]
+		key = "lPYuVe53FBSZfTFaGuS9-w"		#ENV["EMAIL_SERVER_KEY"]
+		##### end #####
 		Net::SMTP.start(host,port,'mandrillapp.com',sender,key) do |smtp|
 			smtp.send_message(mail.to_s,sender,mail.to)
 		end
